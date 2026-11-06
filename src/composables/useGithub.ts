@@ -1,3 +1,4 @@
+import axios from "axios";
 import { ref } from "vue";
 import { GITHUB_USER } from "@/data/profile";
 
@@ -40,17 +41,23 @@ const loading = ref(false);
 const error = ref<string | null>(null);
 let pending: Promise<void> | null = null;
 
-async function getJson<T>(path: string): Promise<T> {
-  const r = await fetch(`https://api.github.com${path}`, {
-    headers: { Accept: "application/vnd.github+json" },
-  });
-  if (!r.ok)
+const github = axios.create({
+  baseURL: "https://api.github.com",
+  headers: { Accept: "application/vnd.github+json" },
+  timeout: 10_000,
+});
+
+async function getJson<T>(path: string, params?: Record<string, string>): Promise<T> {
+  try {
+    return (await github.get<T>(path, { params })).data;
+  } catch (e) {
+    const status = axios.isAxiosError(e) ? e.response?.status : undefined;
     throw new Error(
-      r.status === 403
+      status === 403
         ? "GitHub rate limit reached, try again later"
-        : `GitHub ${r.status}`,
+        : `GitHub ${status ?? "unreachable"}`,
     );
-  return r.json() as Promise<T>;
+  }
 }
 
 async function load() {
@@ -69,7 +76,7 @@ async function load() {
   try {
     const [u, r] = await Promise.all([
       getJson<GithubUser>(`/users/${GITHUB_USER}`),
-      getJson<Repo[]>(`/users/${GITHUB_USER}/repos?per_page=100&sort=pushed`),
+      getJson<Repo[]>(`/users/${GITHUB_USER}/repos`, { per_page: "100", sort: "pushed" }),
     ]);
     user.value = u;
     repos.value = r.filter((x) => !x.fork);

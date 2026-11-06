@@ -1,3 +1,4 @@
+import axios from "axios";
 import { ref, watchEffect } from "vue";
 import { settings } from "./useSettings";
 
@@ -50,10 +51,11 @@ async function find(song: Song): Promise<Hit | null> {
   let hit: Hit | null = null;
   for (const country of STORES) {
     try {
-      const q = new URLSearchParams({ term, entity: "song", limit: "10", country });
-      const r = await fetch(`https://itunes.apple.com/search?${q}`);
-      if (!r.ok) continue;
-      const { results } = (await r.json()) as { results: ItunesSong[] };
+      const { data } = await axios.get<{ results: ItunesSong[] }>("https://itunes.apple.com/search", {
+        params: { term, entity: "song", limit: "10", country },
+        timeout: 8000,
+      });
+      const { results } = data;
       const m = results.find(
         (s) => s.previewUrl && close(s.trackName, song.name) && close(s.artistName, song.artist),
       );
