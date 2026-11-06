@@ -26,6 +26,7 @@ const tuning = ref(false)
 const osd = ref(true)
 const pressed = ref<'up' | 'down' | 'power' | null>(null)
 const now = useClock()
+
 let osdTimer = 0
 let tuneTimer = 0
 let pressTimer = 0
@@ -186,41 +187,41 @@ defineExpose({ tune: step, power, turnOn })
 
 <template>
   <div class="crt-wrap">
-  <div class="crt-tv" :style="{ '--ratio': `${W} / ${H}` }">
-    <CrtScreen class="tube" :style="screenBox" :noise="showNoise" :powering="powering" :tuning="tuning">
-      <template v-if="on">
-        <iframe v-if="item.kind === 'youtube'" ref="frame" :key="item.key" class="picture" :class="{ fill }" :src="src"
-          :title="item.title"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen referrerpolicy="strict-origin-when-cross-origin" @load="listen" />
-        <img v-else :key="item.key" :src="src" :alt="item.title" class="picture clip" draggable="false" />
-      </template>
-      <button v-if="!on" type="button" class="power-big" @click="power">
-        <span class="nf">{{ nf.play }}</span>
-        <span class="pixel">POWER ON</span>
-      </button>
-      <span v-show="osd || !on" class="osd pixel">{{ item.label }}</span>
-      <span v-show="osd && on" class="osd-title">{{ item.title }}</span>
-    </CrtScreen>
+    <div class="crt-tv" :style="{ '--ratio': `${W} / ${H}` }">
+      <CrtScreen class="tube" :style="screenBox" :noise="showNoise" :powering="powering" :tuning="tuning">
+        <template v-if="on">
+          <iframe v-if="item.kind === 'youtube'" ref="frame" :key="item.key" class="picture" :class="{ fill }"
+            :src="src" :title="item.title"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen referrerpolicy="strict-origin-when-cross-origin" @load="listen" />
+          <img v-else :key="item.key" :src="src" :alt="item.title" class="picture clip" draggable="false" />
+        </template>
+        <button v-if="!on" type="button" class="power-big" @click="power">
+          <span class="nf">{{ nf.play }}</span>
+          <span class="pixel">POWER ON</span>
+        </button>
+        <span v-show="osd || !on" class="osd pixel">{{ item.label }}</span>
+        <span v-show="osd && on" class="osd-title">{{ item.title }}</span>
+      </CrtScreen>
 
-    <PixelCanvas class="art" :width="W" :height="H" :draw="draw" :fps="15" />
+      <PixelCanvas class="art" :width="W" :height="H" :draw="draw" :fps="15" />
 
-    <button type="button" class="spot round" :style="spot(DIAL)" aria-label="Next channel"
-      title="CH ▲ (scroll to tune)" @click="step(1)" @wheel.prevent="onWheel" />
-    <button type="button" class="spot" :style="spot(CH_DOWN)" aria-label="Previous" title="CH ▼" @click="step(-1)" />
-    <button type="button" class="spot" :style="spot(CH_UP)" aria-label="Next" title="CH ▲" @click="step(1)" />
-    <button type="button" class="spot" :style="spot(POWER)" :aria-pressed="on" aria-label="Power" title="Power"
-      @click="power" />
-  </div>
+      <button type="button" class="spot round" :style="spot(DIAL)" aria-label="Next channel"
+        title="CH ▲ (scroll to tune)" @click="step(1)" @wheel.prevent="onWheel" />
+      <button type="button" class="spot" :style="spot(CH_DOWN)" aria-label="Previous" title="CH ▼" @click="step(-1)" />
+      <button type="button" class="spot" :style="spot(CH_UP)" aria-label="Next" title="CH ▲" @click="step(1)" />
+      <button type="button" class="spot" :style="spot(POWER)" :aria-pressed="on" aria-label="Power" title="Power"
+        @click="power" />
+    </div>
 
-  <!-- phones: the drawn knobs are too small to tap, so a remote sits under the set -->
-  <div class="remote" aria-label="Remote control">
-    <BevelButton small silent :icon="nf.prev" aria-label="Previous" @click="step(-1)">CH</BevelButton>
-    <BevelButton small silent variant="orange" :pressed="on" :icon="nf.play" @click="power">
-      {{ on ? 'OFF' : 'ON' }}
-    </BevelButton>
-    <BevelButton small silent :icon="nf.next" aria-label="Next" @click="step(1)">CH</BevelButton>
-  </div>
+    <!-- phones: the drawn knobs are too small to tap, so a remote sits under the set -->
+    <div class="remote" aria-label="Remote control">
+      <BevelButton small silent :icon="nf.prev" aria-label="Previous" @click="step(-1)">CH</BevelButton>
+      <BevelButton small silent variant="orange" :pressed="on" :icon="nf.play" @click="power">
+        {{ on ? 'OFF' : 'ON' }}
+      </BevelButton>
+      <BevelButton small silent :icon="nf.next" aria-label="Next" @click="step(1)">CH</BevelButton>
+    </div>
   </div>
 </template>
 

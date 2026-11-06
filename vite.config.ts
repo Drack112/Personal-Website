@@ -6,6 +6,7 @@ import { fileURLToPath, URL } from "node:url";
 export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
   const vercel = env.VERCEL_PROJECT_PRODUCTION_URL;
+
   const site = (
     env.VITE_SITE_URL || (vercel ? `https://${vercel}` : "")
   ).replace(/\/+$/, "");
@@ -29,8 +30,7 @@ export default defineConfig(({ command, mode }) => {
         "@": fileURLToPath(new URL("./src", import.meta.url)),
       },
     },
-    // `npm run dev` borrows the deployed /api (or API_PROXY's). To work on the
-    // functions themselves, run `npx vercel dev`, which serves the app and api/ together.
+
     server: {
       proxy: {
         "/api": {
