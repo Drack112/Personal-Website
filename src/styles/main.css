@@ -1,0 +1,191 @@
+@font-face {
+  font-family: "Hack Nerd Font";
+  src: url("../assets/fonts/HackNerdFont-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Hack Nerd Font";
+  src: url("../assets/fonts/HackNerdFont-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Hack Nerd Icons";
+  src: url("../assets/fonts/HackNerdIcons-Propo.woff2") format("woff2");
+  font-display: block;
+}
+
+:root {
+  /* theme: #5C8895 teal · #A9DC88 light green · #478F62 green · #FEF274 yellow · #CB6E1B orange */
+  --ink: #0e1f1c;
+  --night: #0d1a1a;
+  --deep: #183528;
+  --green: #2c5a44;
+  --green-hi: #478f62;
+  --green-lo: #183528;
+  --orange: #cb6e1b;
+  --orange-lo: #9e5212;
+  --gold: #fef274;
+  --lime: #a9dc88;
+  --cream: #f3ebd3;
+  --purple: #4b2e4a;
+  --beige: #d8cfb0;
+  --beige-hi: #f1ead2;
+  --beige-lo: #a89f80;
+  --muted: #9db8b0;
+  --teal: #5c8895;
+
+  --font-ui: "Hack Nerd Font", ui-monospace, Menlo, Consolas, monospace;
+  --font-pixel: "Press Start 2P", "Hack Nerd Font", monospace;
+  --font-hand: "Comic Neue", "Comic Sans MS", "Chalkboard SE", cursive;
+
+  --cursor: url("/cursors/arrow.png") 0 0, auto;
+  --cursor-hand: url("/cursors/hand.png") 8 0, pointer;
+
+  --bar-h: 44px;
+  --hint-h: 40px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--night);
+  color: var(--cream);
+  font-family: var(--font-ui);
+  font-size: 15px;
+  line-height: 1.5;
+  cursor: var(--cursor);
+  -webkit-font-smoothing: antialiased;
+}
+
+a,
+button,
+[role="button"],
+label,
+select,
+summary,
+.clickable {
+  cursor: var(--cursor-hand);
+}
+
+a {
+  color: var(--gold);
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+::selection {
+  background: var(--orange);
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 2px dashed var(--gold);
+  outline-offset: 3px;
+}
+
+/* chunky retro scrollbars */
+::-webkit-scrollbar {
+  width: 14px;
+  height: 14px;
+}
+::-webkit-scrollbar-track {
+  background: var(--green-lo);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--green);
+  box-shadow:
+    inset 2px 2px 0 var(--green-hi),
+    inset -2px -2px 0 var(--ink);
+}
+* {
+  scrollbar-color: var(--green-hi) var(--green-lo);
+}
+
+.nf {
+  font-family: "Hack Nerd Icons", var(--font-ui);
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1;
+  display: inline-block;
+  text-align: center;
+}
+
+.pixel {
+  font-family: var(--font-pixel);
+  letter-spacing: 0.04em;
+  line-height: 1.6;
+}
+
+/* raised bevel like the 88x31 buttons and the walkman keys */
+.bevel {
+  background: var(--green);
+  box-shadow:
+    0 0 0 3px var(--ink),
+    inset 3px 3px 0 var(--green-hi),
+    inset -3px -3px 0 var(--green-lo);
+}
+.bevel-in {
+  background: var(--green-lo);
+  box-shadow:
+    0 0 0 3px var(--ink),
+    inset 3px 3px 0 var(--ink),
+    inset -3px -3px 0 var(--green-hi);
+}
+.bevel-cream {
+  background: var(--beige);
+  color: var(--ink);
+  box-shadow:
+    0 0 0 3px var(--ink),
+    inset 3px 3px 0 var(--beige-hi),
+    inset -3px -3px 0 var(--beige-lo);
+}
+
+.argyle {
+  background: conic-gradient(
+      from 45deg at 50% 50%,
+      var(--orange) 25%,
+      var(--lime) 0 50%,
+      var(--orange) 0 75%,
+      var(--lime) 0
+    )
+    0 0 / 16px 16px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* app-level "reduce motion" setting and the OS preference */
+html.reduce-motion *,
+html.reduce-motion *::before,
+html.reduce-motion *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
