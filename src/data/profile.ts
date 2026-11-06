@@ -1,7 +1,6 @@
 import { nf } from "./icons";
 
 export const GITHUB_USER = "Drack112";
-export const LASTFM_USER = "Drack112";
 
 export const profile = {
   name: "João Vitor",

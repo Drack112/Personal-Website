@@ -1,0 +1,15 @@
+// TSConfig for the Vercel functions in api/ (Node.js), checked by `npm run type-check`.
+// Vercel compiles them itself; nothing is emitted from here.
+{
+  "extends": "@tsconfig/node24/tsconfig.json",
+  "include": ["api/**/*", "shared/**/*"],
+  "compilerOptions": {
+    "module": "preserve",
+    "moduleResolution": "bundler",
+    "types": ["node"],
+    "verbatimModuleSyntax": true,
+    "noUncheckedIndexedAccess": true,
+    "noEmit": true,
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.api.tsbuildinfo"
+  }
+}

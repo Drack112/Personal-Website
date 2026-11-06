@@ -1,5 +1,7 @@
 import { useStorage } from "@vueuse/core";
+import { api } from "@/lib/api";
 import { songKey, type Song } from "./usePreview";
+import type { VideoMatch } from "../../shared/api";
 
 // Full songs sent from the walkman to the TV: looked up on YouTube and listed
 // in the TV guide's WALKMAN REQUESTS channel (newest first, kept per tab).
@@ -9,9 +11,6 @@ export interface SongRequest {
   name: string;
   artist: string;
 }
-
-const KEY = import.meta.env.VITE_YOUTUBE_API_KEY as string | undefined;
-const PROXY = `${(import.meta.env.VITE_API_BASE as string | undefined) ?? ""}/api/youtube`;
 
 export const requests = useStorage<SongRequest[]>("lk.requests", [], sessionStorage);
 
@@ -27,14 +26,7 @@ export async function findVideo(song: Song): Promise<string | null> {
   const q = query(song);
   let id: string | null = null;
   try {
-    if (KEY) {
-      const params = new URLSearchParams({ part: "snippet", type: "video", videoEmbeddable: "true", maxResults: "1", q, key: KEY });
-      const r = await fetch(`https://www.googleapis.com/youtube/v3/search?${params}`);
-      if (r.ok) id = (await r.json()).items?.[0]?.id?.videoId ?? null;
-    } else {
-      const r = await fetch(`${PROXY}?${new URLSearchParams({ q })}`);
-      if (r.ok) id = (await r.json()).id ?? null;
-    }
+    id = (await api<VideoMatch>("youtube", { q })).id;
   } catch {
     id = null;
   }

@@ -29,5 +29,15 @@ export default defineConfig(({ command, mode }) => {
         "@": fileURLToPath(new URL("./src", import.meta.url)),
       },
     },
+    // `npm run dev` borrows the deployed /api (or API_PROXY's). To work on the
+    // functions themselves, run `npx vercel dev`, which serves the app and api/ together.
+    server: {
+      proxy: {
+        "/api": {
+          target: env.API_PROXY || "https://website-psi-ten-90.vercel.app",
+          changeOrigin: true,
+        },
+      },
+    },
   };
 });

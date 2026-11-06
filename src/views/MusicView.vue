@@ -39,9 +39,8 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
           </li>
         </ol>
         <p v-else-if="lastfm.status.value === 'offline'" class="muted">
-          Last.fm is offline here. Set <code>VITE_LASTFM_API_KEY</code> in <code>frontend/.env.local</code> for local
-          dev, or
-          <code>LASTFM_API_KEY</code> on Vercel for the <code>/api/lastfm</code> proxy.
+          Last.fm is offline here. Set <code>LASTFM_API_KEY</code> in <code>frontend/.env</code> for local dev, or in
+          the Vercel project's environment variables, for the <code>/api/lastfm</code> functions.
         </p>
         <p v-else class="muted blink">rewinding tape...</p>
       </RetroWindow>
