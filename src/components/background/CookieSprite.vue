@@ -8,7 +8,7 @@ const image = `url("${cookie}")`
   <div class="sprite" :style="{ backgroundImage: image }" />
 </template>
 
-<style scoped>
+<style scoped lang="css">
 .sprite {
   --size: max(96px, 46vmin);
   position: absolute;

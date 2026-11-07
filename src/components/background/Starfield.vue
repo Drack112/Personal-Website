@@ -16,7 +16,7 @@ const stars = Array.from({ length: props.count }, () => ({
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="css">
 .star {
   position: absolute;
   width: 2px;

@@ -2,8 +2,6 @@ export interface ApiError {
   error: number;
   message: string;
 }
-
-// --- /api/lastfm/* -----------------------------------------------------------------
 export interface Track {
   name: string;
   artist: string;
@@ -11,7 +9,7 @@ export interface Track {
   image: string; // cover URL, '' when Last.fm only has its placeholder
   url: string;
   nowPlaying: boolean;
-  uts: number | null; // when it was scrobbled (unix seconds), null while playing
+  uts: number | null;
 }
 
 export interface TopArtist {
@@ -20,26 +18,20 @@ export interface TopArtist {
   url: string;
 }
 
-// GET /api/lastfm/recent
 export interface RecentTracks {
-  tracks: Track[]; // newest first
-  total: number; // all-time scrobbles
+  tracks: Track[];
+  total: number;
 }
 
-// GET /api/lastfm/top-artists
 export interface TopArtists {
-  artists: TopArtist[]; // last 7 days
+  artists: TopArtist[];
 }
-
-// GET /api/lastfm/track-length?artist=&track=
 export interface TrackLength {
-  seconds: number; // 0 when Last.fm doesn't know it
+  seconds: number;
 }
 
-// --- /api/youtube ------------------------------------------------------------------
-// GET /api/youtube?q=artist+title
 export interface VideoMatch {
-  id: string | null; // null when nothing embeddable was found
+  id: string | null;
   title?: string;
   channel?: string;
 }

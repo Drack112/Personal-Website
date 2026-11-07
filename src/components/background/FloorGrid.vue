@@ -7,7 +7,7 @@
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="css">
 .floor {
   --cell: 36px;
   position: absolute;

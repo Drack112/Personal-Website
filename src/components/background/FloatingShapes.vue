@@ -1,7 +1,4 @@
 <script setup lang="ts">
-// △ ○ ✕ □ outlines, Memphis triangles and squiggles slowly rising across the
-// screen and spinning on the way. Each kind is an SVG <symbol>, drawn with <use>;
-// every shape only gets a random position, size, colour and timing here.
 import { loop, pick, rand } from '@/lib/random'
 
 const props = withDefaults(defineProps<{ count?: number }>(), { count: 20 })
@@ -9,7 +6,6 @@ const props = withDefaults(defineProps<{ count?: number }>(), { count: 20 })
 const COLORS = ['#A9DC88', '#CB6E1B', '#FEF274', '#5C8895', '#F3EBD3']
 const KINDS = ['tri', 'tri', 'circle', 'cross', 'square', 'memphis', 'memphis', 'squiggle'] // repeats = more common
 const SIZE: Record<string, [number, number]> = { memphis: [8, 18], squiggle: [26, 48] } // px, others 14-38
-
 
 const shapes = Array.from({ length: props.count }, () => {
   const kind = pick(KINDS)
@@ -62,13 +58,11 @@ const shapes = Array.from({ length: props.count }, () => {
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="css">
 .defs {
   position: absolute;
 }
 
-/* rests at --y and loops from just below the screen to just above it,
-   spinning on the way (one animation per shape) */
 .shape {
   position: absolute;
   top: calc(var(--y) * 1vh);
@@ -98,7 +92,6 @@ const shapes = Array.from({ length: props.count }, () => {
   }
 }
 
-/* fewer on phones (the defs <svg> is the first child) */
 @media (max-width: 720px) {
   .shapes> :nth-child(n + 14) {
     display: none;

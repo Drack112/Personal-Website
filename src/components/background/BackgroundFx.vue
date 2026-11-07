@@ -1,9 +1,4 @@
 <script setup lang="ts">
-// Full-screen backdrop behind every screen: a deep green gradient with drifting
-// fog, plus the parts in this folder (the cookie on the horizon, the floor grid,
-// stars and rising shapes). All HTML/SVG + CSS animations, no canvas or JS loop;
-// every animation is transform or opacity only, so the GPU runs them without
-// repainting anything.
 import CookieSprite from './CookieSprite.vue'
 import FloatingShapes from './FloatingShapes.vue'
 import FloorGrid from './FloorGrid.vue'
@@ -22,17 +17,15 @@ const props = withDefaults(defineProps<{ accent?: string }>(), { accent: '#CB6E1
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="css">
 .bg-fx {
   --horizon: 72%;
-  /* where the cookie sits and the floor starts */
   position: fixed;
   inset: 0;
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
   contain: strict;
-  /* nothing in here affects the page layout, and the other way round */
   background: linear-gradient(#0d1a1a, #142b27 55%, #183528);
 }
 

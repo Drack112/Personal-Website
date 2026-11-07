@@ -14,18 +14,23 @@ interface SearchResponse {
   }[];
 }
 
-const fail = (res: VercelResponse, status: number, message: string) =>
-  res.status(status).json({ error: status, message } satisfies ApiError);
-
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const key = process.env.YOUTUBE_API_KEY;
-  if (!key) return fail(res, 503, "YOUTUBE_API_KEY is not set");
+  if (!key)
+    return res.status(503).json({
+      error: 503,
+      message: "YOUTUBE_API_KEY is not set",
+    } satisfies ApiError);
 
   const raw = req.query.q;
   const q = String((Array.isArray(raw) ? raw[0] : raw) ?? "")
     .trim()
     .slice(0, 200);
-  if (!q) return fail(res, 400, "q is required");
+  if (!q)
+    return res.status(400).json({
+      error: 400,
+      message: "q is required",
+    } satisfies ApiError);
 
   try {
     const { data } = await youtubeApi.get<SearchResponse>("search", {
@@ -51,11 +56,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     );
   } catch (e) {
     if (axios.isAxiosError<{ error?: { message?: string } }>(e) && e.response)
-      return fail(
-        res,
-        e.response.status,
-        e.response.data?.error?.message || "YouTube error",
-      );
-    return fail(res, 502, e instanceof Error ? e.message : "YouTube error");
+      return res.status(e.response.status).json({
+        error: e.response.status,
+        message: e.response.data?.error?.message || "YouTube error",
+      } satisfies ApiError);
+
+    return res.status(502).json({
+      error: 502,
+      message: e instanceof Error ? e.message : "YouTube error",
+    } satisfies ApiError);
   }
 }
