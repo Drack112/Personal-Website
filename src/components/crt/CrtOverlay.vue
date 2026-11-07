@@ -7,7 +7,7 @@ import { settings } from '@/composables/useSettings'
   <CrtScanlines v-if="settings.crt.value" class="crt-overlay" :strength="0.18" flicker vignette />
 </template>
 
-<style scoped>
+<style scoped lang="css">
 .crt-overlay {
   position: fixed;
   z-index: 50;

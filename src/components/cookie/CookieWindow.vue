@@ -19,8 +19,10 @@ interface LogLine {
 const open = ref(false)
 const log = ref<LogLine[]>([])
 const art = ref<AsciiArt | null>(null)
+
 const done = ref(false)
 const busy = ref(false)
+
 const wrap = ref<HTMLElement>()
 const box = ref({ w: 600, h: 360 })
 
@@ -37,27 +39,34 @@ async function roll() {
   if (busy.value) return
   busy.value = true
   const id = ++runId
+
   done.value = false
   art.value = null
+
   let pick = Math.floor(Math.random() * stills.length)
   if (stills.length > 1 && pick === lastPick) pick = (pick + 1) % stills.length
+
   lastPick = pick
   const clip = stills[pick]!
   log.value = []
+
   const say = async (text: string, kind?: LogLine['kind'], ms = 260) => {
     if (id !== runId) return
     log.value.push({ text, kind })
     sfx.move()
     await wait(ms)
   }
+
   await say('unwrapping cookie...', 'dim')
   await say(`found image ${String(pick + 1).padStart(2, '0')}/${stills.length} · ${clip.name}`, 'ok')
   await nextTick()
+
   measure()
   // fill the whole art area: pick the grid from the space available
   const cell = window.innerWidth < 720 ? 5.5 : 6.5 // px per character
   const cols = Math.max(20, Math.floor(box.value.w / cell))
   const lines = Math.max(10, Math.floor(box.value.h / (cell / ASPECT)))
+
   try {
     const next = await imageToAscii(clip.url, cols, lines)
     if (id !== runId) return
@@ -81,6 +90,7 @@ async function show() {
   open.value = true
   overlayOpen.value = true
   sfx.open()
+
   await nextTick()
   void roll()
 }
@@ -93,8 +103,6 @@ function close() {
   sfx.close()
 }
 
-// While open, this window owns the keyboard (capture phase, before the screen
-// underneath): Esc closes, Enter rolls another cookie. "c" opens it anywhere.
 function onKey(e: KeyboardEvent) {
   if (!open.value) {
     const typing = e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement
@@ -117,11 +125,13 @@ function onKey(e: KeyboardEvent) {
 }
 
 const onOpenCookie = () => void show()
+
 onMounted(() => {
   window.addEventListener('lk:open-cookie', onOpenCookie)
   window.addEventListener('keydown', onKey, { capture: true })
   window.addEventListener('resize', measure)
 })
+
 onBeforeUnmount(() => {
   window.removeEventListener('lk:open-cookie', onOpenCookie)
   window.removeEventListener('keydown', onKey, { capture: true })
@@ -163,7 +173,7 @@ onBeforeUnmount(() => {
   </Teleport>
 </template>
 
-<style scoped>
+<style scoped lang="css">
 .overlay {
   position: fixed;
   inset: 0;

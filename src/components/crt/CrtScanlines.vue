@@ -17,7 +17,7 @@ withDefaults(
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="css">
 .crt-scanlines,
 .lines,
 .vignette {

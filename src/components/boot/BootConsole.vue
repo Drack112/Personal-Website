@@ -27,7 +27,6 @@ const timers: number[] = []
 const sleep = (ms: number) => new Promise<void>((r) => timers.push(window.setTimeout(r, ms)))
 let started = 0
 
-// kernel-style timestamp, a bit slower than real time
 const stamp = () => `[${(((performance.now() - started) / 1000) * 0.42 + 0.000001).toFixed(6).padStart(12, ' ')}]`
 
 async function push(line: LogLine) {
@@ -144,7 +143,7 @@ onBeforeUnmount(() => timers.forEach((t) => window.clearTimeout(t)))
         <template v-if="l.kind === 'kern'"><span class="ts">{{ l.ts }}</span> {{ l.text }}</template>
         <template v-else-if="l.kind === 'ok'"><span class="st ok">{{ '[ OK ]' }}</span> {{ l.text }}</template>
         <template v-else-if="l.kind === 'job'"><span class="st job">{{ JOB_FRAMES[l.frame ?? 0] }}</span> {{ l.text
-          }}</template>
+        }}</template>
         <template v-else-if="l.kind === 'prompt'"><span class="ps1">{{ profile.handle }}@portfolio</span>:<span
             class="ps2">~</span>$ {{ l.text }}</template>
         <template v-else-if="l.kind === 'progress'">{{ l.text }} <span class="pbar">{{ barOf(l.pct) }}</span></template>
@@ -157,7 +156,7 @@ onBeforeUnmount(() => timers.forEach((t) => window.clearTimeout(t)))
   </section>
 </template>
 
-<style scoped>
+<style scoped lang="css">
 .console {
   position: relative;
   z-index: 2;

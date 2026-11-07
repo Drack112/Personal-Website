@@ -2,13 +2,11 @@
 import { onBeforeUnmount, ref, watch } from 'vue'
 import CrtScanlines from './CrtScanlines.vue'
 
-// tuning: the picture rolls and tears while the set changes channel
 const props = defineProps<{ noise?: boolean; powering?: boolean; tuning?: boolean }>()
 
 const canvas = ref<HTMLCanvasElement>()
 let raf = 0
 
-// static: a small canvas of random grey pixels, redrawn every frame and scaled up
 function drawNoise() {
   const c = canvas.value
   if (!c) return
@@ -47,7 +45,7 @@ onBeforeUnmount(() => cancelAnimationFrame(raf))
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="css">
 .screen {
   position: relative;
   aspect-ratio: 16 / 9;
@@ -96,7 +94,7 @@ onBeforeUnmount(() => cancelAnimationFrame(raf))
   animation: band 0.32s linear infinite;
 }
 
-.tune-fx i + i {
+.tune-fx i+i {
   height: 9%;
   animation-duration: 0.21s;
   animation-delay: -0.1s;

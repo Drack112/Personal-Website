@@ -11,8 +11,7 @@ import { embedUrl } from '@/data/tokusato'
 import { sfx } from '@/composables/useSound'
 import { useClock } from '@/composables/useClock'
 
-// fill: the video is a 4:3 picture with black bars inside a 16:9 frame; zoom it
-// so the picture itself fills the 4:3 tube
+
 export type ScreenItem =
   | { kind: 'youtube'; key: string; id: string; ep: number; playlistId: string; title: string; label: string; fill?: boolean }
   | { kind: 'image'; key: string; url: string; title: string; label: string }
@@ -225,7 +224,7 @@ defineExpose({ tune: step, power, turnOn })
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="css">
 .remote {
   display: none;
   justify-content: center;
