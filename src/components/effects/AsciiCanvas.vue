@@ -1,7 +1,4 @@
 <script setup lang="ts">
-// Animates colored ASCII art "forming": every cell starts as scrambled green
-// noise, flashes white and locks into its colour, center outwards. Locked cells
-// are painted once onto an offscreen layer so large arts stay at 60fps.
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { ASPECT, type AsciiArt } from '@/lib/ascii'
 import { settings } from '@/composables/useSettings'
@@ -36,7 +33,6 @@ let finished = false
 function prepare() {
   const { cols, lines } = props.art
   cells = props.art.cells.map((c) => {
-    // distance from the center (aspect-corrected): forms from the middle out
     const dx = (c.x / cols - 0.5) * 2
     const dy = ((c.y / lines - 0.5) * 2) / ASPECT / 1.6
     const d = Math.min(1, Math.hypot(dx, dy))

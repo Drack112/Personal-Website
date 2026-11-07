@@ -1,6 +1,4 @@
 <script setup lang="ts">
-// Y2K cursor trail: little △ ○ ✕ □ ✦ sparks that fall and fade behind the
-// pointer. Only on devices with a real mouse, and only when motion is on.
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { settings } from '@/composables/useSettings'
 
@@ -45,13 +43,9 @@ onBeforeUnmount(() => window.removeEventListener('pointermove', onMove))
 
 <template>
   <div class="trail" aria-hidden="true">
-    <span
-      v-for="s in sparks"
-      :key="s.id"
-      class="spark"
-      :style="{ left: `${s.x + 14}px`, top: `${s.y + 16}px`, color: s.color, '--drift': `${s.drift}px` }"
-      >{{ s.glyph }}</span
-    >
+    <span v-for="s in sparks" :key="s.id" class="spark"
+      :style="{ left: `${s.x + 14}px`, top: `${s.y + 16}px`, color: s.color, '--drift': `${s.drift}px` }">{{ s.glyph
+      }}</span>
   </div>
 </template>
 
@@ -63,6 +57,7 @@ onBeforeUnmount(() => window.removeEventListener('pointermove', onMove))
   pointer-events: none;
   overflow: hidden;
 }
+
 .spark {
   position: absolute;
   font-family: var(--font-ui);
@@ -71,6 +66,7 @@ onBeforeUnmount(() => window.removeEventListener('pointermove', onMove))
   text-shadow: 1px 1px 0 var(--ink);
   animation: fall 0.7s linear forwards;
 }
+
 @keyframes fall {
   to {
     transform: translate(var(--drift), 26px) scale(0.4);
