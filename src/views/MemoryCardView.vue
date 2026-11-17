@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useResizeObserver } from '@vueuse/core'
+import dayjs from 'dayjs'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -17,7 +18,6 @@ const router = useRouter()
 const { repos, loading, error } = useGithub()
 
 type Slot = 'github' | 'career'
-const slot = computed<Slot>(() => (route.params.slot === 'career' ? 'career' : 'github'))
 
 interface Save {
   id: string
@@ -32,57 +32,67 @@ interface Save {
   job?: Experience
 }
 
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-const ym = (s: string) => {
-  const [y, m] = s.split('-').map(Number)
-  return `${MONTHS[m! - 1]} ${y}`
+const MEDIA: Media[] = ['tape', 'cart', 'disc', 'floppy']
+
+const slot = computed<Slot>(() =>
+  route.params.slot === 'career' ? 'career' : 'github',
+)
+
+const ym = (value: string) => dayjs(value).format('MMM YYYY')
+
+const stamp = (value: string) => dayjs(value).format('YYYY/MM/DD')
+
+const months = (start: string, end: string | null) => {
+  const total = (end ? dayjs(end) : dayjs()).diff(start, 'month') + 1
+  const years = Math.floor(total / 12)
+  const remaining = total % 12
+
+  return [
+    years && `${years} yr${years > 1 ? 's' : ''}`,
+    remaining && `${remaining} mo${remaining > 1 ? 's' : ''}`,
+  ].filter(Boolean).join(' ')
 }
-function months(start: string, end: string | null) {
-  const [y1, m1] = start.split('-').map(Number)
-  const d = end ? end.split('-').map(Number) : [new Date().getFullYear(), new Date().getMonth() + 1]
-  const n = (d[0]! - y1!) * 12 + (d[1]! - m1!) + 1
-  const y = Math.floor(n / 12)
-  const m = n % 12
-  return [y && `${y} yr${y > 1 ? 's' : ''}`, m && `${m} mo${m > 1 ? 's' : ''}`].filter(Boolean).join(' ')
-}
-const stamp = (iso: string) => {
-  const d = new Date(iso)
-  return `${d.getFullYear()}/${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')}`
-}
-const kb = (n: number) => (n >= 1024 ? `${(n / 1024).toFixed(1)} MB` : `${n} KB`)
+
+const kb = (size: number) =>
+  size >= 1024 ? `${(size / 1024).toFixed(1)} MB` : `${size} KB`
 
 const featuredOrder = Object.keys(featuredRepos)
+
 const githubSaves = computed<Save[]>(() =>
   [...repos.value]
     .sort((a, b) => {
-      const fa = featuredOrder.indexOf(a.name)
-      const fb = featuredOrder.indexOf(b.name)
-      if (fa !== -1 || fb !== -1) return (fa === -1 ? 999 : fa) - (fb === -1 ? 999 : fb)
+      const ai = featuredOrder.indexOf(a.name)
+      const bi = featuredOrder.indexOf(b.name)
+
+      if (ai !== -1 || bi !== -1) {
+        return (ai === -1 ? Infinity : ai) - (bi === -1 ? Infinity : bi)
+      }
+
       return b.pushed_at.localeCompare(a.pushed_at)
     })
-    .map((r) => {
-      const icon = (r.language && languageIcon[r.language]) || fallbackIcon
+    .map((repo) => {
+      const icon = languageIcon[repo.language ?? ''] || fallbackIcon
+
       return {
-        id: r.name,
-        label: r.name.replaceAll('-', ' '),
+        id: repo.name,
+        label: repo.name.replaceAll('-', ' '),
         glyph: icon.glyph,
         color: icon.color,
-        badge: r.stargazers_count ? `★${r.stargazers_count}` : undefined,
-        date: stamp(r.pushed_at),
-        size: kb(r.size),
-        repo: r,
+        badge: repo.stargazers_count ? `★${repo.stargazers_count}` : undefined,
+        date: stamp(repo.pushed_at),
+        size: kb(repo.size),
+        repo,
       }
     }),
 )
 
 const careerSaves = computed<Save[]>(() =>
-  experience.map((job, i) => ({
+  experience.map((job, index) => ({
     id: job.id,
-    // each job on a different kind of media
-    media: (['tape', 'cart', 'disc', 'floppy'] as const)[i % 4],
     label: job.company,
     glyph: job.icon,
     color: job.color,
+    media: MEDIA[index % MEDIA.length],
     badge: job.end ? undefined : 'NOW',
     date: `${ym(job.start)} – ${job.end ? ym(job.end) : 'present'}`,
     size: months(job.start, job.end),
@@ -90,28 +100,33 @@ const careerSaves = computed<Save[]>(() =>
   })),
 )
 
-const saves = computed(() => (slot.value === 'github' ? githubSaves.value : careerSaves.value))
+const saves = computed(() =>
+  slot.value === 'github' ? githubSaves.value : careerSaves.value,
+)
+
 const used = computed(() =>
   slot.value === 'github'
-    ? `${kb(repos.value.reduce((n, r) => n + r.size, 0))} used`
-    : `${months(experience.at(-1)!.start, null)} of saves`,
+    ? `${kb(repos.value.reduce((total, repo) => total + repo.size, 0))} used`
+    : `${months(experience[experience.length - 1]?.start ?? '', null)} of saves`,
 )
 
 const grid = ref<HTMLElement>()
 const columns = ref(5)
-useResizeObserver(grid, (entries) => {
-  const w = entries[0]?.contentRect.width ?? 600
-  columns.value = Math.max(2, Math.floor(w / 132))
+
+useResizeObserver(grid, ([entry]) => {
+  columns.value = Math.max(2, Math.floor((entry?.contentRect.width ?? 600) / 132))
 })
 
 const open = ref<Save | null>(null)
+
 const nav = useMenuNav({
   count: () => saves.value.length,
   columns: () => columns.value,
   enabled: () => !open.value,
-  onSelect: (i) => openSave(i),
+  onSelect: openSave,
   onBack: () => router.push('/menu'),
 })
+
 const selected = computed(() => saves.value[nav.index.value] ?? null)
 
 watch(slot, () => {
@@ -119,35 +134,50 @@ watch(slot, () => {
   open.value = null
 })
 
-function openSave(i: number) {
-  const s = saves.value[i]
-  if (!s) return
-  nav.index.value = i
-  open.value = s
+function openSave(index: number) {
+  const save = saves.value[index]
+  if (!save) return
+
+  nav.index.value = index
+  open.value = save
   sfx.open()
 }
+
 function close() {
   open.value = null
 }
-function switchSlot(s: Slot) {
-  if (s === slot.value) return
+
+function switchSlot(next: Slot) {
+  if (next === slot.value) return
+
   sfx.select()
-  router.replace(`/memory-card/${s}`)
+  router.replace(`/memory-card/${next}`)
 }
 
-function onKey(e: KeyboardEvent) {
-  if (open.value && (e.key === 'Escape' || e.key === 'Backspace')) {
-    e.preventDefault()
-    e.stopImmediatePropagation()
+function onKey(event: KeyboardEvent) {
+  if (open.value && ['Escape', 'Backspace'].includes(event.key)) {
+    event.preventDefault()
+    event.stopImmediatePropagation()
     sfx.back()
     close()
-  } else if (!open.value && (e.key === '1' || e.key === '2' || e.key === 'Tab')) {
-    e.preventDefault()
-    switchSlot(e.key === '1' ? 'github' : e.key === '2' ? 'career' : slot.value === 'github' ? 'career' : 'github')
+    return
+  }
+
+  if (!open.value && ['1', '2', 'Tab'].includes(event.key)) {
+    event.preventDefault()
+
+    const next = event.key === '1'
+      ? 'github'
+      : event.key === '2'
+        ? 'career'
+        : slot.value === 'github' ? 'career' : 'github'
+
+    switchSlot(next)
   }
 }
-onMounted(() => window.addEventListener('keydown', onKey, { capture: true }))
-onBeforeUnmount(() => window.removeEventListener('keydown', onKey, { capture: true }))
+
+onMounted(() => window.addEventListener('keydown', onKey, true))
+onBeforeUnmount(() => window.removeEventListener('keydown', onKey, true))
 </script>
 
 <template>
