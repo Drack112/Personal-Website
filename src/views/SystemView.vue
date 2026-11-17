@@ -21,6 +21,7 @@ const TABS = [
   { id: 'links', label: 'LINKS', icon: nf.globe },
   { id: 'settings', label: 'SETTINGS', icon: nf.cog },
 ] as const
+
 type Tab = (typeof TABS)[number]['id']
 const tab = computed<Tab>(() => (TABS.some((t) => t.id === route.params.tab) ? (route.params.tab as Tab) : 'profile'))
 
@@ -31,15 +32,19 @@ function setTab(t: Tab) {
 }
 
 const stars = computed(() => repos.value.reduce((n, r) => n + r.stargazers_count, 0))
+
 const topLanguages = computed(() => {
   const count = new Map<string, number>()
   for (const r of repos.value) if (r.language) count.set(r.language, (count.get(r.language) ?? 0) + 1)
+
   const total = [...count.values()].reduce((a, b) => a + b, 0) || 1
+
   return [...count.entries()]
     .sort((a, b) => b[1] - a[1])
     .slice(0, 6)
     .map(([name, n]) => ({ name, pct: Math.round((n / total) * 100) }))
 })
+
 const memberSince = computed(() => (user.value ? new Date(user.value.created_at).getFullYear() : '····'))
 const yearsCoding = computed(() => new Date().getFullYear() - Number(experience.at(-1)!.start.slice(0, 4)))
 
@@ -54,6 +59,7 @@ function flip(key: (typeof toggles)[number]['key']) {
   settings[key].value = !settings[key].value
   sfx.select()
 }
+
 function replayBoot() {
   sessionStorage.removeItem('lk.booted')
   router.push('/')
@@ -102,7 +108,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
             {{ profile.headline }} <span class="sep">|</span> {{ profile.focus.join(' · ') }}
           </p>
           <p class="muted">{{ profile.specialties }} <span class="sep">|</span> {{profile.domains.map((d) =>
-            d.name).join(' · ') }}</p>
+            d.name).join(' · ')}}</p>
           <p v-for="p in profile.about" :key="p">{{ p }}</p>
           <p>{{ profile.beyondCode }}</p>
           <p class="fan"><span class="nf">{{ nf.tv }}</span> {{ profile.fan }}</p>
@@ -133,7 +139,8 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
           <span class="nf link-icon">{{ nf.github }}</span>
           <span class="link-name pixel">GITHUB</span>
           <span class="link-handle">@{{ profile.handle }}</span>
-          <span class="link-meta">{{ user?.public_repos ?? '··' }} repos · {{ user?.followers ?? '··' }} followers</span>
+          <span class="link-meta">{{ user?.public_repos ?? '··' }} repos · {{ user?.followers ?? '··' }}
+            followers</span>
           <span class="link-go">OPEN ▸</span>
         </a>
         <a class="link in" :href="profile.links.linkedin" target="_blank" rel="noopener" @click="sfx.select()">
