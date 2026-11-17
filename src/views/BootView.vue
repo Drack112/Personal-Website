@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// "PRESS START", then the boot: the DRACK112 logo drops in with a chime and a
+// "PRESS START"
 // boom, recedes into the background, and the boot console (components/boot)
 // prints its logs; when it is done it switches off like a CRT and the menu opens.
 import { onBeforeUnmount, onMounted, ref } from 'vue'
@@ -15,9 +15,12 @@ type Phase = 'start' | 'intro' | 'logo' | 'console' | 'off'
 const LOGO_AT = 0.6 // seconds after PRESS START: when the boom lands
 const CONSOLE_AT = 2.8 // the logo recedes and the boot console comes up
 const router = useRouter()
+
 useGithub() // start loading the repos now; the console reports how many there are
+
 const phase = ref<Phase>('start')
 const letters = profile.handle.toUpperCase().split('')
+
 let done = false
 const timers: number[] = []
 const at = (seconds: number, fn: () => void) => timers.push(window.setTimeout(fn, seconds * 1000))
