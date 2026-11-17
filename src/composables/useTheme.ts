@@ -1,17 +1,14 @@
 import { ref } from 'vue'
 
 import { settings } from '@/composables/useSettings'
-import { sfx } from '@/composables/useSound'
 import type { Theme } from '@/data/themes'
 
-const SWAP_MS = 420
-const END_MS = 1100
+const NOISE_MS = 700
 
 export const theme = ref<Theme>('original')
 export const shifting = ref<Theme | null>(null)
 
-let swapTimer = 0
-let endTimer = 0
+let noiseTimer = 0
 
 function apply(next: Theme) {
   theme.value = next
@@ -20,18 +17,15 @@ function apply(next: Theme) {
 }
 
 export function setTheme(next: Theme) {
-  if (next === (shifting.value ?? theme.value)) return
-  window.clearTimeout(swapTimer)
-  window.clearTimeout(endTimer)
+  if (next === theme.value) return
+  apply(next)
+  window.clearTimeout(noiseTimer)
 
   if (!settings.motion.value) {
     shifting.value = null
-    apply(next)
     return
   }
 
   shifting.value = next
-  sfx.open()
-  swapTimer = window.setTimeout(() => apply(next), SWAP_MS)
-  endTimer = window.setTimeout(() => (shifting.value = null), END_MS)
+  noiseTimer = window.setTimeout(() => (shifting.value = null), NOISE_MS)
 }
