@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-12 -12 24 24" fill="none">
+  <!-- small solid triangle with an offset cream outline, very 90s -->
+  <path d="M0-10 10 10H-10Z" fill="currentColor" />
+  <path d="M4-6 14 14H-6Z" stroke="#F3EBD3" stroke-width="2" opacity="0.8" vector-effect="non-scaling-stroke" />
+</svg>

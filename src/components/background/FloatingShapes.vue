@@ -1,68 +1,52 @@
 <script setup lang="ts">
 import { loop, pick, rand } from '@/lib/random'
 
-const props = withDefaults(defineProps<{ count?: number }>(), { count: 20 })
+import circle from '@/assets/shapes/circle.svg?raw'
+import cross from '@/assets/shapes/cross.svg?raw'
+import memphis from '@/assets/shapes/memphis.svg?raw'
+import square from '@/assets/shapes/square.svg?raw'
+import squiggle from '@/assets/shapes/squiggle.svg?raw'
+import tri from '@/assets/shapes/tri.svg?raw'
 
+const props = withDefaults(defineProps<{ count?: number }>(), { count: 20 })
 const COLORS = ['#A9DC88', '#CB6E1B', '#FEF274', '#5C8895', '#F3EBD3']
-const KINDS = ['tri', 'tri', 'circle', 'cross', 'square', 'memphis', 'memphis', 'squiggle'] // repeats = more common
-const SIZE: Record<string, [number, number]> = { memphis: [8, 18], squiggle: [26, 48] } // px, others 14-38
+
+const SHAPES: { svg: string; size: [number, number] }[] = [
+  { svg: tri, size: [14, 38] },
+  { svg: tri, size: [14, 38] },
+  { svg: circle, size: [14, 38] },
+  { svg: cross, size: [14, 38] },
+  { svg: square, size: [14, 38] },
+  { svg: memphis, size: [8, 18] },
+  { svg: memphis, size: [8, 18] },
+  { svg: squiggle, size: [26, 48] },
+]
 
 const shapes = Array.from({ length: props.count }, () => {
-  const kind = pick(KINDS)
+  const { svg, size } = pick(SHAPES)
   return {
-    kind,
+    svg,
     style: {
       left: `${rand(0, 100)}%`,
       '--y': rand(0, 100),
-      '--size': `${rand(...(SIZE[kind] ?? [14, 38]))}px`,
+      '--size': `${rand(...size)}px`,
       '--drift': `${rand(-60, 60)}px`,
       '--turn': `${pick([-1, 1]) * rand(180, 720)}deg`,
       color: pick(COLORS),
       opacity: rand(0.18, 0.4),
-      ...loop(60, 200), // rising across the screen
+      ...loop(60, 200),
     },
   }
 })
 </script>
 
 <template>
-  <div class="shapes">
-    <svg class="defs" width="0" height="0">
-      <symbol id="bg-tri" viewBox="-12 -12 24 24">
-        <path d="M0-10 9.2 6H-9.2Z" vector-effect="non-scaling-stroke" />
-      </symbol>
-      <symbol id="bg-circle" viewBox="-12 -12 24 24">
-        <circle r="8" vector-effect="non-scaling-stroke" />
-      </symbol>
-      <symbol id="bg-cross" viewBox="-12 -12 24 24">
-        <path d="M-7-7 7 7M7-7-7 7" vector-effect="non-scaling-stroke" />
-      </symbol>
-      <symbol id="bg-square" viewBox="-12 -12 24 24">
-        <rect x="-7" y="-7" width="14" height="14" vector-effect="non-scaling-stroke" />
-      </symbol>
-      <!-- small solid triangle with an offset cream outline, very 90s -->
-      <symbol id="bg-memphis" viewBox="-12 -12 24 24">
-        <path d="M0-10 10 10H-10Z" fill="currentColor" stroke="none" />
-        <path d="M4-6 14 14H-6Z" stroke="#F3EBD3" stroke-width="2" opacity="0.8" vector-effect="non-scaling-stroke" />
-      </symbol>
-      <symbol id="bg-squiggle" viewBox="-12 -12 24 24">
-        <path d="M-10 2.5Q-7.5-6-5-2.5Q-2.5 6 0 2.5Q2.5-6 5-2.5Q7.5 6 10 2.5" vector-effect="non-scaling-stroke" />
-      </symbol>
-    </svg>
-
-    <div v-for="(s, i) in shapes" :key="i" class="shape" :style="s.style">
-      <svg>
-        <use :href="`#bg-${s.kind}`" />
-      </svg>
-    </div>
+  <div class="shapes" aria-hidden="true">
+    <div v-for="(s, i) in shapes" :key="i" class="shape" :style="s.style" v-html="s.svg" />
   </div>
 </template>
 
 <style scoped lang="css">
-.defs {
-  position: absolute;
-}
-
 .shape {
   position: absolute;
   top: calc(var(--y) * 1vh);
@@ -72,14 +56,11 @@ const shapes = Array.from({ length: props.count }, () => {
   animation: rise linear infinite;
 }
 
-.shape svg {
+.shape :deep(svg) {
   display: block;
   width: 100%;
   height: 100%;
   overflow: visible;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 3;
 }
 
 @keyframes rise {
@@ -93,7 +74,7 @@ const shapes = Array.from({ length: props.count }, () => {
 }
 
 @media (max-width: 720px) {
-  .shapes> :nth-child(n + 14) {
+  .shape:nth-child(n + 13) {
     display: none;
   }
 }
