@@ -1,0 +1,23 @@
+.nf {
+  font-family: "Hack Nerd Icons", var(--font-ui);
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1;
+  display: inline-block;
+  text-align: center;
+}
+
+.pixel {
+  font-family: var(--font-pixel);
+  letter-spacing: 0.04em;
+  line-height: 1.6;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

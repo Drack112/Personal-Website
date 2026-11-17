@@ -44,7 +44,6 @@ const image = `url("${cookie}")`
 }
 
 @keyframes twinkle {
-
   0%,
   100% {
     opacity: 0.15;

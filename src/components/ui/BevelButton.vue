@@ -65,9 +65,11 @@ function onClick(e: MouseEvent) {
     box-shadow 0.06s;
   user-select: none;
 }
+
 .bbtn:hover {
   filter: brightness(1.12);
 }
+
 .bbtn:active,
 .bbtn.pressed {
   transform: translate(3px, 3px);
@@ -77,22 +79,26 @@ function onClick(e: MouseEvent) {
     inset -3px -3px 0 var(--hi),
     1px 1px 0 3px rgba(0, 0, 0, 0.35);
 }
+
 .bbtn.orange {
   --face: var(--orange);
   --hi: #e0914a;
   --lo: var(--orange-lo);
   --fg: var(--ink);
 }
+
 .bbtn.cream {
   --face: var(--beige);
   --hi: var(--beige-hi);
   --lo: var(--beige-lo);
   --fg: var(--ink);
 }
+
 .bbtn.small {
   font-size: 0.78rem;
   padding: 0.4em 0.7em;
 }
+
 .icon {
   font-size: 1.15em;
 }

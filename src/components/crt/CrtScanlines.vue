@@ -1,10 +1,10 @@
 <script setup lang="ts">
 withDefaults(
   defineProps<{
-    strength?: number // darkness of each line, 0-1
-    flicker?: boolean // a faint flicker now and then
-    roll?: boolean // lines slowly drifting down, like a TV picture
-    vignette?: boolean // darker corners
+    strength?: number
+    flicker?: boolean
+    roll?: boolean
+    vignette?: boolean
   }>(),
   { strength: 0.2 },
 )
@@ -30,7 +30,6 @@ withDefaults(
   background: repeating-linear-gradient(to bottom, var(--line) 0 1px, transparent 1px 3px);
 }
 
-/* a transform, not background-position, so it never repaints */
 .lines.roll {
   top: -30px;
   animation: roll 7s linear infinite;
@@ -57,7 +56,6 @@ withDefaults(
 }
 
 @keyframes flicker {
-
   0%,
   92% {
     opacity: 1;

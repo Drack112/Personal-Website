@@ -1,0 +1,23 @@
+@import "@fontsource/press-start-2p";
+@import "@fontsource/comic-neue/400.css";
+@import "@fontsource/comic-neue/700.css";
+
+@font-face {
+  font-family: "Hack Nerd Font";
+  src: url("../assets/fonts/HackNerdFont-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Hack Nerd Font";
+  src: url("../assets/fonts/HackNerdFont-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Hack Nerd Icons";
+  src: url("../assets/fonts/HackNerdIcons-Propo.woff2") format("woff2");
+  font-display: block;
+}

@@ -1,0 +1,19 @@
+:root[data-theme="mizer"] {
+  --ink: #120916;
+  --night: #160b1d;
+  --dusk: #221029;
+  --deep: #2d1439;
+  --green: #4a2160;
+  --green-hi: #7b3d98;
+  --green-lo: #2d1439;
+  --orange: #b8862b;
+  --orange-lo: #86601a;
+  --gold: #d8b04a;
+  --lime: #c9a4e2;
+  --cream: #efe4d6;
+  --beige: #cdbfa0;
+  --beige-hi: #e9dfc6;
+  --beige-lo: #9a8c6c;
+  --muted: #a594b8;
+  --teal: #6c4d8e;
+}

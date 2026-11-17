@@ -1,11 +1,8 @@
 <script setup lang="ts">
-// Shows a pixel-art scene: `draw` paints one frame into a low-res buffer, which
-// the canvas scales up with hard edges. Frames run at a fixed retro rate and
-// stop while the scene is off screen or the tab is hidden. With motion off the
-// clock stands still, so only state changes (power, pressed keys...) show.
 import { onBeforeUnmount, onMounted, ref } from 'vue'
-import { Pixels } from '@/lib/pixel'
+
 import { settings } from '@/composables/useSettings'
+import { Pixels } from '@/lib/pixel'
 
 const props = withDefaults(
   defineProps<{

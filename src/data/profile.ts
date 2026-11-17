@@ -1,4 +1,4 @@
-import { nf } from "./icons";
+import { nf } from "@/data/icons";
 
 export const GITHUB_USER = "Drack112";
 
@@ -35,8 +35,8 @@ export interface Experience {
   id: string;
   company: string;
   role: string;
-  start: string; // YYYY-MM
-  end: string | null; // null = current
+  start: string;
+  end: string | null;
   place: string;
   mode: string;
   domain: string;
@@ -47,7 +47,6 @@ export interface Experience {
   stack: string[];
 }
 
-// newest first
 export const experience: Experience[] = [
   {
     id: "omni-2026",
@@ -170,7 +169,6 @@ export interface StackGroup {
   items: string[];
 }
 
-// LinkedIn stack + what the GitHub repos actually use
 export const stack: StackGroup[] = [
   {
     label: "languages",
@@ -295,7 +293,6 @@ export const stack: StackGroup[] = [
   },
 ];
 
-// repos shown first on the GitHub memory card, with a short English blurb
 export const featuredRepos: Record<string, string> = {
   "Golang-SimpleBank":
     "Bank API master class with DDD & TDD — Go, Gin, gRPC, PostgreSQL, Redis, Traefik, CI/CD.",

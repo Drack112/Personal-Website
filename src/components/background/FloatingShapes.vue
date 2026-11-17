@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { loop, pick, rand } from '@/lib/random'
-
 import circle from '@/assets/shapes/circle.svg?raw'
 import cross from '@/assets/shapes/cross.svg?raw'
 import memphis from '@/assets/shapes/memphis.svg?raw'
@@ -8,8 +7,7 @@ import square from '@/assets/shapes/square.svg?raw'
 import squiggle from '@/assets/shapes/squiggle.svg?raw'
 import tri from '@/assets/shapes/tri.svg?raw'
 
-const props = withDefaults(defineProps<{ count?: number }>(), { count: 20 })
-const COLORS = ['#A9DC88', '#CB6E1B', '#FEF274', '#5C8895', '#F3EBD3']
+const COLORS = ['var(--lime)', 'var(--orange)', 'var(--gold)', 'var(--teal)', 'var(--cream)']
 
 const SHAPES: { svg: string; size: [number, number] }[] = [
   { svg: tri, size: [14, 38] },
@@ -21,6 +19,8 @@ const SHAPES: { svg: string; size: [number, number] }[] = [
   { svg: memphis, size: [8, 18] },
   { svg: squiggle, size: [26, 48] },
 ]
+
+const props = withDefaults(defineProps<{ count?: number }>(), { count: 20 })
 
 const shapes = Array.from({ length: props.count }, () => {
   const { svg, size } = pick(SHAPES)

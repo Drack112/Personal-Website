@@ -1,6 +1,4 @@
 <script setup lang="ts">
-// Bevelled window with a title bar. Opens with a CRT "power on" squeeze and
-// closes with the reverse; wrap it in v-if to animate in and out.
 import { sfx } from '@/composables/useSound'
 
 withDefaults(defineProps<{ title: string; icon?: string; closable?: boolean; accent?: string }>(), {
@@ -32,7 +30,7 @@ function close() {
 <style scoped>
 .win {
   position: relative;
-  background: rgba(14, 31, 28, 0.92);
+  background: color-mix(in srgb, var(--ink) 92%, transparent);
   box-shadow:
     0 0 0 3px var(--ink),
     inset 0 0 0 3px var(--green-hi),
@@ -41,6 +39,7 @@ function close() {
   animation: power-on 0.32s steps(6) both;
   backdrop-filter: blur(2px);
 }
+
 .bar {
   display: flex;
   align-items: center;
@@ -50,10 +49,12 @@ function close() {
   border-bottom: 3px solid var(--ink);
   box-shadow: inset 0 -3px 0 var(--accent);
 }
+
 .ico {
   color: var(--accent);
   font-size: 1.1rem;
 }
+
 .title {
   margin: 0;
   flex: 1;
@@ -64,22 +65,27 @@ function close() {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .dots {
   display: flex;
   gap: 4px;
 }
+
 .dots i {
   width: 8px;
   height: 8px;
   background: var(--accent);
   box-shadow: 0 0 0 2px var(--ink);
 }
+
 .dots i:nth-child(2) {
   background: var(--gold);
 }
+
 .dots i:nth-child(3) {
   background: var(--orange);
 }
+
 .x {
   border: 0;
   width: 26px;
@@ -92,20 +98,24 @@ function close() {
     inset 2px 2px 0 #e0914a,
     inset -2px -2px 0 var(--orange-lo);
 }
+
 .body {
   padding: 1rem;
 }
+
 @keyframes power-on {
   0% {
     transform: scale(1, 0.02);
     filter: brightness(3);
     opacity: 0;
   }
+
   40% {
     transform: scale(1, 0.06);
     filter: brightness(2.2);
     opacity: 1;
   }
+
   100% {
     transform: none;
     filter: none;

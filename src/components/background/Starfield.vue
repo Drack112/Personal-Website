@@ -21,13 +21,12 @@ const stars = Array.from({ length: props.count }, () => ({
   position: absolute;
   width: 2px;
   height: 2px;
-  background: #f3ebd3;
+  background: var(--cream);
   opacity: 0.5;
   animation: twinkle ease-in-out infinite;
 }
 
 @keyframes twinkle {
-
   0%,
   100% {
     opacity: 0.15;
@@ -38,9 +37,8 @@ const stars = Array.from({ length: props.count }, () => ({
   }
 }
 
-/* fewer on phones */
 @media (max-width: 720px) {
-  .stars> :nth-child(n + 21) {
+  .stars > :nth-child(n + 21) {
     display: none;
   }
 }

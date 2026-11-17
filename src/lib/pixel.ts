@@ -1,11 +1,7 @@
-// Tiny pixel-art painter: draws into a low-resolution RGBA buffer that a
-// <canvas> shows scaled up with `image-rendering: pixelated`.
-
-export type Color = string | null // '#rrggbb', null = transparent (a hole)
+export type Color = string | null
 
 const cache = new Map<string, number>()
 
-// '#rrggbb' -> the same colour as a little-endian RGBA word for Uint32Array
 function word(c: Color): number {
   if (!c) return 0
   let v = cache.get(c)
@@ -17,7 +13,6 @@ function word(c: Color): number {
   return v
 }
 
-// 3x5 font: 15 bits per glyph, row by row, most significant bit first
 const FONT: Record<string, number> = {}
 const glyphs: [string, string][] = [
   ['0', '111101101101111'], ['1', '010110010010111'], ['2', '111001111100111'], ['3', '111001111001111'],
@@ -35,7 +30,6 @@ const glyphs: [string, string][] = [
 ]
 for (const [ch, bits] of glyphs) FONT[ch] = parseInt(bits, 2)
 
-// which of the seven segments (a b c d e f g) light up for each character
 const SEG: Record<string, string> = {
   '0': 'abcdef', '1': 'bc', '2': 'abdeg', '3': 'abcdg', '4': 'bcfg', '5': 'acdfg',
   '6': 'acdefg', '7': 'abc', '8': 'abcdefg', '9': 'abcdfg', '-': 'g', ' ': '',
@@ -45,7 +39,6 @@ const SEG: Record<string, string> = {
 export class Pixels {
   readonly data: Uint32Array
   private readonly image: ImageData
-  // drawing offset, so a part of a scene can be drawn in its own coordinates
   private ox = 0
   private oy = 0
 
@@ -65,10 +58,6 @@ export class Pixels {
   origin(x: number, y: number) {
     this.ox = x
     this.oy = y
-  }
-
-  copy(from: Pixels) {
-    this.data.set(from.data)
   }
 
   px(x: number, y: number, c: Color) {
@@ -104,7 +93,6 @@ export class Pixels {
     this.vline(x + w - 1, y, h, c)
   }
 
-  // how far row `y` of a rounded rect starts inside its left/right edge
   private inset(y: number, h: number, r: number) {
     const d = Math.min(y, h - 1 - y)
     if (d >= r) return 0
@@ -118,22 +106,6 @@ export class Pixels {
     }
   }
 
-  // 1px outline of a rounded rect, with no gaps on the steep corner steps
-  rframe(x: number, y: number, w: number, h: number, r: number, c: Color) {
-    for (let i = 0; i < h; i++) {
-      const s = this.inset(i, h, r)
-      const prev = i === 0 || i === h - 1 ? w : this.inset(i < h / 2 ? i - 1 : i + 1, h, r)
-      const run = Math.max(1, prev - s)
-      if (i === 0 || i === h - 1) {
-        this.hline(x + s, y + i, w - 2 * s, c)
-        continue
-      }
-      this.hline(x + s, y + i, run, c)
-      this.hline(x + w - s - run, y + i, run, c)
-    }
-  }
-
-  // rounded rect with a 1px outline, a lit top/left edge and a shaded bottom/right edge
   panel(x: number, y: number, w: number, h: number, r: number, fill: Color, hi: Color, lo: Color, line: Color) {
     this.rrect(x, y, w, h, r, line)
     this.rrect(x + 1, y + 1, w - 2, h - 2, Math.max(0, r - 1), lo)
@@ -141,9 +113,8 @@ export class Pixels {
     this.rrect(x + 2, y + 2, w - 4, h - 4, Math.max(0, r - 2), fill)
   }
 
-  // ordered dither: `level` 0-4 of every 2x2 block painted
   dither(x: number, y: number, w: number, h: number, c: Color, level = 2) {
-    const order = [0, 2, 3, 1] // 2x2 Bayer
+    const order = [0, 2, 3, 1]
     for (let yy = y; yy < y + h; yy++) {
       for (let xx = x; xx < x + w; xx++) {
         if (order[(yy & 1) * 2 + (xx & 1)]! < level) this.px(xx, yy, c)
@@ -176,7 +147,6 @@ export class Pixels {
     }
   }
 
-  // quadratic bezier as a chain of short lines
   curve(x0: number, y0: number, cx: number, cy: number, x1: number, y1: number, c: Color, steps = 24) {
     let px = x0
     let py = y0
@@ -215,7 +185,6 @@ export class Pixels {
     }
   }
 
-  // blend `c` over what is already there, `a` 0-1 (for glass glare)
   mix(x: number, y: number, c: string, a: number) {
     x = (x + this.ox) | 0
     y = (y + this.oy) | 0
@@ -232,8 +201,6 @@ export class Pixels {
     this.data[i] = out >>> 0
   }
 
-  // 3x5 text, each font pixel `scale` art pixels; returns the width it took.
-  // Unknown characters print as blanks.
   text(x: number, y: number, str: string, c: Color, gap = 1, scale = 1) {
     let cx = x
     for (const ch of str.toUpperCase()) {
@@ -246,7 +213,6 @@ export class Pixels {
     return cx - x - gap
   }
 
-  // a small bitmap given as rows of '1'/'0'; `skip` drops every other pixel (a dithered fade)
   sprite(x: number, y: number, rows: readonly string[], c: Color, skip = false) {
     rows.forEach((row, j) => {
       for (let i = 0; i < row.length; i++) {
@@ -255,7 +221,6 @@ export class Pixels {
     })
   }
 
-  // one seven-segment character of w x h; unlit segments are drawn in `off`
   seg(x: number, y: number, ch: string, w: number, h: number, on: Color, off: Color = null) {
     const lit = SEG[ch.toUpperCase()] ?? ''
     const mid = Math.floor((h - 1) / 2)
@@ -293,7 +258,6 @@ export class Pixels {
   }
 }
 
-// a rect in art pixels as absolute CSS percentages, for hotspots and overlays
 export function place(r: { x: number; y: number; w: number; h: number }, W: number, H: number) {
   return {
     left: `${(r.x / W) * 100}%`,

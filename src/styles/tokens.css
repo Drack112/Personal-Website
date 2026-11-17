@@ -1,0 +1,11 @@
+:root {
+  --font-ui: "Hack Nerd Font", ui-monospace, Menlo, Consolas, monospace;
+  --font-pixel: "Press Start 2P", "Hack Nerd Font", monospace;
+  --font-hand: "Comic Neue", "Comic Sans MS", "Chalkboard SE", cursive;
+
+  --cursor: url("/cursors/arrow.png") 0 0, auto;
+  --cursor-hand: url("/cursors/hand.png") 8 0, pointer;
+
+  --bar-h: 44px;
+  --hint-h: 40px;
+}

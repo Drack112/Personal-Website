@@ -1,13 +1,12 @@
-// (@TokuSatoOficial); nothing is re-hosted here.
 export const tokusato = {
   channel: "TokuSato",
   channelUrl: "https://www.youtube.com/@TokuSatoOficial",
   rights:
-    "Kamen Rider Black © Ishimori Production Inc. · Toei · distributed by TokuSato",
+    "Kamen Rider Black & Kamen Rider Black RX © Ishimori Production Inc. · Toei · distributed by TokuSato",
 };
 
 export interface Episode {
-  id: string; // YouTube video id
+  id: string;
   ep: number;
   title: string;
 }
@@ -17,7 +16,6 @@ export interface VideoCategory {
   title: string;
   subtitle: string;
   playlistId: string;
-  // 4:3 episodes uploaded inside a 16:9 frame with black side bars
   pillarboxed?: boolean;
   items: Episode[];
 }

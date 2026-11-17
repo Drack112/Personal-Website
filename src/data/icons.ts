@@ -11,9 +11,6 @@ export const nf = {
   shell: "",
   vim: "",
   jupyter: "",
-  node: "",
-  aws: "",
-  gcp: "",
   docker: "",
   tux: "",
   code: "",
@@ -25,7 +22,6 @@ export const nf = {
   robot: "\u{f06a9}",
   chart: "",
   cloud: "",
-  card: "",
   flask: "",
   github: "",
   linkedin: "",
@@ -34,14 +30,11 @@ export const nf = {
   fork: "",
   music: "",
   tv: "\u{f07f4}",
-  gamepad: "",
   save: "",
   play: "",
-  pause: "",
   next: "",
   prev: "",
   clock: "",
-  heart: "",
   vol: "",
   mute: "",
   cog: "",
@@ -52,10 +45,8 @@ export const nf = {
   memory: "\u{f035b}",
   cookie: "\u{f0198}",
   bell: "",
-  home: "",
   back: "",
   external: "",
-  building: "",
   briefcase: "",
   crt: "\u{f0379}",
   sparkle: "\u{f1545}",
@@ -66,7 +57,6 @@ export const nf = {
   mouse: "\u{f037d}",
 } as const;
 
-export type IconName = keyof typeof nf;
 
 export const languageIcon: Record<string, { glyph: string; color: string }> = {
   Go: { glyph: nf.go, color: "#00ADD8" },

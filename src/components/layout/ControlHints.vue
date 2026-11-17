@@ -8,9 +8,10 @@ export interface Hint {
   label: string
 }
 
+const color: Record<Hint['button'], string> = { '✕': '#A9DC88', '○': '#CB6E1B', '△': '#FEF274', '□': '#F3EBD3' }
+
 const route = useRoute()
 const hints = computed(() => (route.meta.hints as Hint[] | undefined) ?? [])
-const color: Record<Hint['button'], string> = { '✕': '#A9DC88', '○': '#CB6E1B', '△': '#FEF274', '□': '#F3EBD3' }
 </script>
 
 <template>
@@ -36,7 +37,7 @@ const color: Record<Hint['button'], string> = { '✕': '#A9DC88', '○': '#CB6E1
   padding: 0 1.2rem;
   font-size: 0.75rem;
   color: var(--cream);
-  background: linear-gradient(0deg, rgba(13, 26, 26, 0.95), rgba(13, 26, 26, 0.55));
+  background: linear-gradient(0deg, color-mix(in srgb, var(--night) 95%, transparent), color-mix(in srgb, var(--night) 55%, transparent));
   border-top: 3px solid var(--ink);
 }
 
@@ -57,7 +58,6 @@ const color: Record<Hint['button'], string> = { '✕': '#A9DC88', '○': '#CB6E1
   font-size: 0.7rem;
   line-height: 1;
   padding-bottom: 2px;
-  /* the △○✕□ glyphs sit a bit low in their em box */
 }
 
 kbd {
@@ -68,8 +68,7 @@ kbd {
   border: 1px solid var(--green-hi);
 }
 
-@media (pointer: coarse),
-(max-width: 720px) {
+@media (pointer: coarse), (max-width: 720px) {
   .hints {
     display: none;
   }

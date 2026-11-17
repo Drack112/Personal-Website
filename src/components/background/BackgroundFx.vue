@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import CookieSprite from './CookieSprite.vue'
-import FloatingShapes from './FloatingShapes.vue'
-import FloorGrid from './FloorGrid.vue'
-import Starfield from './Starfield.vue'
+import CookieSprite from '@/components/background/CookieSprite.vue'
+import FloatingShapes from '@/components/background/FloatingShapes.vue'
+import FloorGrid from '@/components/background/FloorGrid.vue'
+import Starfield from '@/components/background/Starfield.vue'
 
 const props = withDefaults(defineProps<{ accent?: string }>(), { accent: '#CB6E1B' })
 </script>
@@ -26,15 +26,15 @@ const props = withDefaults(defineProps<{ accent?: string }>(), { accent: '#CB6E1
   overflow: hidden;
   pointer-events: none;
   contain: strict;
-  background: linear-gradient(#0d1a1a, #142b27 55%, #183528);
+  background: linear-gradient(var(--night), var(--dusk) 55%, var(--deep));
 }
 
 .fog {
   position: absolute;
   inset: -10%;
   background:
-    radial-gradient(circle 55vmax at 20% 30%, rgba(44, 90, 68, 0.55), transparent),
-    radial-gradient(circle 60vmax at 80% 70%, rgba(92, 136, 149, 0.35), transparent),
+    radial-gradient(circle 55vmax at 20% 30%, color-mix(in srgb, var(--green) 55%, transparent), transparent),
+    radial-gradient(circle 60vmax at 80% 70%, color-mix(in srgb, var(--teal) 35%, transparent), transparent),
     radial-gradient(circle 50vmax at 50% 100%, color-mix(in srgb, var(--accent) 12%, transparent), transparent);
   animation: drift 80s ease-in-out infinite alternate;
 }

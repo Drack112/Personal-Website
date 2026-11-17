@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue'
+
 import { settings } from '@/composables/useSettings'
 
 interface Spark {
@@ -13,10 +14,11 @@ interface Spark {
 
 const GLYPHS = ['△', '○', '✕', '□', '✦']
 const COLORS = ['#A9DC88', '#CB6E1B', '#FEF274', '#5C8895', '#F3EBD3']
+const finePointer = window.matchMedia('(pointer: fine)').matches
+
 const sparks = ref<Spark[]>([])
 let id = 0
 let last = 0
-const finePointer = window.matchMedia('(pointer: fine)').matches
 
 function onMove(e: PointerEvent) {
   if (!finePointer || !settings.trail.value || !settings.motion.value) return
@@ -43,9 +45,12 @@ onBeforeUnmount(() => window.removeEventListener('pointermove', onMove))
 
 <template>
   <div class="trail" aria-hidden="true">
-    <span v-for="s in sparks" :key="s.id" class="spark"
-      :style="{ left: `${s.x + 14}px`, top: `${s.y + 16}px`, color: s.color, '--drift': `${s.drift}px` }">{{ s.glyph
-      }}</span>
+    <span
+      v-for="s in sparks"
+      :key="s.id"
+      class="spark"
+      :style="{ left: `${s.x + 14}px`, top: `${s.y + 16}px`, color: s.color, '--drift': `${s.drift}px` }"
+    >{{ s.glyph }}</span>
   </div>
 </template>
 

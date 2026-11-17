@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
+
 import type { Hint } from '@/components/layout/ControlHints.vue'
-import MenuView from '@/views/MenuView.vue'
+import MenuView from '@/features/menu/MenuView.vue'
+import { hasBooted } from '@/lib/boot'
 
 declare module 'vue-router' {
   interface RouteMeta {
@@ -19,9 +21,9 @@ const router = createRouter({
     {
       path: '/',
       name: 'boot',
-      component: () => import('@/views/BootView.vue'),
+      component: () => import('@/features/boot/BootView.vue'),
       meta: { title: 'BOOT' },
-      beforeEnter: () => (sessionStorage.getItem('lk.booted') ? '/menu' : true),
+      beforeEnter: () => (hasBooted() ? '/menu' : true),
     },
     {
       path: '/menu',
@@ -32,7 +34,7 @@ const router = createRouter({
     {
       path: '/memory-card/:slot?',
       name: 'memory-card',
-      component: () => import('@/views/MemoryCardView.vue'),
+      component: () => import('@/features/memory-card/MemoryCardView.vue'),
       meta: {
         title: 'MEMORY CARD',
         accent: '#A9DC88',
@@ -42,19 +44,19 @@ const router = createRouter({
     {
       path: '/system/:tab?',
       name: 'system',
-      component: () => import('@/views/SystemView.vue'),
+      component: () => import('@/features/system/SystemView.vue'),
       meta: { title: 'SYSTEM CONFIGURATION', accent: '#FEF274', hints: [{ button: '□', key: '1-4', label: 'Tabs' }, back] },
     },
     {
       path: '/music',
       name: 'music',
-      component: () => import('@/views/MusicView.vue'),
+      component: () => import('@/features/music/MusicView.vue'),
       meta: { title: 'MUSIC', accent: '#CB6E1B', hints: [back] },
     },
     {
       path: '/video/:cat?',
       name: 'video',
-      component: () => import('@/views/VideoView.vue'),
+      component: () => import('@/features/video/VideoView.vue'),
       meta: {
         title: 'VIDEO',
         accent: '#F3EBD3',

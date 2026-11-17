@@ -1,33 +1,37 @@
 <script setup lang="ts">
-import { useClock } from '@/composables/useClock'
 import { computed, onBeforeUnmount, onMounted } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
-import { nf } from '@/data/icons'
+
+import { useClock } from '@/composables/useClock'
+import { useLastfm } from '@/composables/useLastfm'
 import { settings } from '@/composables/useSettings'
 import { sfx } from '@/composables/useSound'
-import { useLastfm } from '@/composables/useLastfm'
+import { nf } from '@/data/icons'
 
 const route = useRoute()
 const now = useClock()
+const lastfm = useLastfm()
+
 const clock = computed(() => now.value.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }))
 const date = computed(() => now.value.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }).toUpperCase())
-
-const lastfm = useLastfm()
-onMounted(lastfm.start)
-onBeforeUnmount(lastfm.stop)
 const playing = computed(() => (lastfm.current.value?.nowPlaying ? lastfm.current.value : null))
 
 function toggleSound() {
   settings.sound.value = !settings.sound.value
   sfx.select()
 }
+
 function openTerminal() {
   window.dispatchEvent(new CustomEvent('lk:toggle-terminal'))
 }
+
 function toggleCrt() {
   settings.crt.value = !settings.crt.value
   sfx.select()
 }
+
+onMounted(lastfm.start)
+onBeforeUnmount(lastfm.stop)
 </script>
 
 <template>
@@ -47,12 +51,22 @@ function toggleCrt() {
       <button class="icon-btn" type="button" title="Terminal ( ` )" aria-label="Open terminal" @click="openTerminal">
         <span class="nf">{{ nf.shell }}</span>
       </button>
-      <button class="icon-btn" type="button" :aria-pressed="settings.crt.value"
-        :title="settings.crt.value ? 'CRT on' : 'CRT off'" @click="toggleCrt">
+      <button
+        class="icon-btn"
+        type="button"
+        :aria-pressed="settings.crt.value"
+        :title="settings.crt.value ? 'CRT on' : 'CRT off'"
+        @click="toggleCrt"
+      >
         <span class="nf">{{ nf.crt }}</span>
       </button>
-      <button class="icon-btn" type="button" :aria-pressed="settings.sound.value"
-        :title="settings.sound.value ? 'Sound on' : 'Sound off'" @click="toggleSound">
+      <button
+        class="icon-btn"
+        type="button"
+        :aria-pressed="settings.sound.value"
+        :title="settings.sound.value ? 'Sound on' : 'Sound off'"
+        @click="toggleSound"
+      >
         <span class="nf">{{ settings.sound.value ? nf.vol : nf.mute }}</span>
       </button>
       <div class="clock" :title="now.toString()">
@@ -73,9 +87,9 @@ function toggleCrt() {
   align-items: center;
   gap: 1rem;
   padding: 0 1rem;
-  background: linear-gradient(180deg, rgba(13, 26, 26, 0.95), rgba(13, 26, 26, 0.6));
+  background: linear-gradient(180deg, color-mix(in srgb, var(--night) 95%, transparent), color-mix(in srgb, var(--night) 60%, transparent));
   border-bottom: 3px solid var(--ink);
-  box-shadow: 0 3px 0 rgba(169, 220, 136, 0.25);
+  box-shadow: 0 3px 0 color-mix(in srgb, var(--lime) 25%, transparent);
 }
 
 .logo {
@@ -135,14 +149,14 @@ function toggleCrt() {
   text-decoration: none;
 }
 
+.eq {
+  animation: bounce 0.8s steps(2) infinite;
+}
+
 .np-text {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.eq {
-  animation: bounce 0.8s steps(2) infinite;
 }
 
 .right {
@@ -152,7 +166,7 @@ function toggleCrt() {
   margin-left: auto;
 }
 
-.np+.right {
+.np + .right {
   margin-left: 1rem;
 }
 
@@ -171,7 +185,6 @@ function toggleCrt() {
 
 .icon-btn .nf {
   transform: translateY(1px);
-  /* these glyphs sit slightly high in their em box */
 }
 
 .icon-btn[aria-pressed='false'] {
@@ -209,14 +222,9 @@ function toggleCrt() {
 }
 
 @media (max-width: 720px) {
-
   .crumb,
   .np,
   .date {
-    display: none;
-  }
-
-  .name .dim {
     display: none;
   }
 }

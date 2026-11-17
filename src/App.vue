@@ -5,11 +5,12 @@ import { RouterView, useRoute } from 'vue-router'
 import BackgroundFx from '@/components/background/BackgroundFx.vue'
 import CrtOverlay from '@/components/crt/CrtOverlay.vue'
 import CursorTrail from '@/components/effects/CursorTrail.vue'
-import TopBar from '@/components/layout/TopBar.vue'
+import ThemeShift from '@/components/effects/ThemeShift.vue'
 import ControlHints from '@/components/layout/ControlHints.vue'
 import CreditsButton from '@/components/layout/CreditsButton.vue'
-import CookieWindow from '@/components/cookie/CookieWindow.vue'
-import QuakeTerminal from '@/components/terminal/QuakeTerminal.vue'
+import TopBar from '@/components/layout/TopBar.vue'
+import CookieWindow from '@/features/cookie/CookieWindow.vue'
+import QuakeTerminal from '@/features/terminal/QuakeTerminal.vue'
 
 const route = useRoute()
 const booting = computed(() => route.name === 'boot')
@@ -30,6 +31,7 @@ const booting = computed(() => route.name === 'boot')
   <QuakeTerminal v-if="!booting" />
   <CreditsButton />
   <CrtOverlay />
+  <ThemeShift />
   <CursorTrail />
 </template>
 
@@ -65,10 +67,8 @@ const booting = computed(() => route.name === 'boot')
   filter: blur(3px);
 }
 
-@media (pointer: coarse),
-(max-width: 720px) {
+@media (pointer: coarse), (max-width: 720px) {
   .stage {
-    /* room for the floating credits button */
     padding-bottom: 4.5rem;
   }
 }

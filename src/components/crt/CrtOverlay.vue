@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import CrtScanlines from './CrtScanlines.vue'
+import CrtScanlines from '@/components/crt/CrtScanlines.vue'
 import { settings } from '@/composables/useSettings'
 </script>
 

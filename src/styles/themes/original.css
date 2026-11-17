@@ -1,0 +1,19 @@
+:root {
+  --ink: #0e1f1c;
+  --night: #0d1a1a;
+  --dusk: #142b27;
+  --deep: #183528;
+  --green: #2c5a44;
+  --green-hi: #478f62;
+  --green-lo: #183528;
+  --orange: #cb6e1b;
+  --orange-lo: #9e5212;
+  --gold: #fef274;
+  --lime: #a9dc88;
+  --cream: #f3ebd3;
+  --beige: #d8cfb0;
+  --beige-hi: #f1ead2;
+  --beige-lo: #a89f80;
+  --muted: #9db8b0;
+  --teal: #5c8895;
+}

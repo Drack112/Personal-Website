@@ -1,6 +1,3 @@
-<script setup lang="ts">
-</script>
-
 <template>
   <div class="floor">
     <div class="grid" />
@@ -25,8 +22,8 @@
   position: absolute;
   inset: calc(var(--cell) * -1) 0 0;
   background:
-    linear-gradient(rgba(169, 220, 136, 0.16) 1px, transparent 1px) 0 0 / 100% var(--cell),
-    linear-gradient(90deg, rgba(169, 220, 136, 0.08) 1px, transparent 1px) 50% 0 / 48px 100%;
+    linear-gradient(color-mix(in srgb, var(--lime) 16%, transparent) 1px, transparent 1px) 0 0 / 100% var(--cell),
+    linear-gradient(90deg, color-mix(in srgb, var(--lime) 8%, transparent) 1px, transparent 1px) 50% 0 / 48px 100%;
   animation: scroll 1.6s linear infinite;
 }
 
